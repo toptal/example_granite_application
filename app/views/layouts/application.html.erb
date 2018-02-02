@@ -9,6 +9,15 @@
   </head>
 
   <body>
+    Welcome
+    <% if current_user %>
+      <%= current_user.email %>, <%= link_to 'Logout', destroy_user_session_path, method: :delete %>
+    <% else %>
+      Guest, <%= link_to 'Login', new_user_session_path %> or <%= link_to 'Sign up', new_user_registration_path %>
+    <% end %>
+    <hr/>
+    <p id="notice"><%= notice %></p>
+    <p id="alert"><%= alert %></p>
     <%= yield %>
   </body>
 </html>
