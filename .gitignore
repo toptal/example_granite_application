@@ -17,7 +17,9 @@
 !/log/.keep
 !/tmp/.keep
 
+# Frontend stuff
 /node_modules
 /yarn-error.log
 
-.byebug_history
+# SimpleCov reports
+/coverage
