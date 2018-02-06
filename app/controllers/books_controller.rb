@@ -1,5 +1,7 @@
 class BooksController < ApplicationController
-  before_action :set_book, only: [:show, :edit, :update, :destroy]
+  rescue_from Monolith::Action::NotAllowedError do |exception|
+    redirect_to books_path, alert: 'You can not do that.'
+  end
 
   # GET /books
   # GET /books.json
@@ -10,6 +12,7 @@ class BooksController < ApplicationController
   # GET /books/1
   # GET /books/1.json
   def show
+    @book = Book.find(params[:id])
   end
 
   # GET /books/new
@@ -19,20 +22,22 @@ class BooksController < ApplicationController
 
   # GET /books/1/edit
   def edit
+    @book = Book.find(params[:id])
   end
 
   # POST /books
   # POST /books.json
   def create
-    @book = Book.new(book_params)
+    book_action = BA::Book::Create.as(current_user).new(book_params)
 
     respond_to do |format|
-      if @book.save
-        format.html { redirect_to @book, notice: 'Book was successfully created.' }
-        format.json { render :show, status: :created, location: @book }
+      if book_action.perform
+        format.html { redirect_to book_action.subject, notice: 'Book was successfully created.' }
+        format.json { render :show, status: :created, location: book_action.subject }
       else
+        @book = book_action.subject
         format.html { render :new }
-        format.json { render json: @book.errors, status: :unprocessable_entity }
+        format.json { render json: book_action.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -40,13 +45,15 @@ class BooksController < ApplicationController
   # PATCH/PUT /books/1
   # PATCH/PUT /books/1.json
   def update
+    @book = Book.find(params[:id])
+    book_action = BA::Book::Update.as(current_user).new(@book, book_params)
     respond_to do |format|
-      if @book.update(book_params)
+      if book_action.perform
         format.html { redirect_to @book, notice: 'Book was successfully updated.' }
         format.json { render :show, status: :ok, location: @book }
       else
         format.html { render :edit }
-        format.json { render json: @book.errors, status: :unprocessable_entity }
+        format.json { render json: book_action.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -54,6 +61,7 @@ class BooksController < ApplicationController
   # DELETE /books/1
   # DELETE /books/1.json
   def destroy
+    @book = Book.find(params[:id])
     @book.destroy
     respond_to do |format|
       format.html { redirect_to books_url, notice: 'Book was successfully destroyed.' }
@@ -62,13 +70,7 @@ class BooksController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_book
-      @book = Book.find(params[:id])
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
     def book_params
-      params.require(:book).permit(:title)
+      params.require(:book).to_unsafe_hash.merge(id: params[:id])
     end
 end

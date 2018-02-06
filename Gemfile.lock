@@ -1,3 +1,21 @@
+GIT
+  remote: https://github.com/pyromaniac/active_data.git
+  revision: 875daa46dc4533afdd9c150e8040e27e9fd498e8
+  specs:
+    active_data (1.0.0)
+      activemodel (>= 4.0)
+      activesupport (>= 4.0)
+      tzinfo
+
+PATH
+  remote: ../monolith
+  specs:
+    monolith (0.0.1)
+      actionpack
+      active_data
+      activesupport
+      memoist
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -72,6 +90,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.7.0)
       mini_mime (>= 0.1.1)
+    memoist (0.16.0)
     method_source (0.9.0)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
@@ -189,8 +208,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_data!
   devise
   jbuilder (~> 2.5)
+  monolith!
   pry-rails
   pry-stack_explorer
   puma (~> 3.7)
