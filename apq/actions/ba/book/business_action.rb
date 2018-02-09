@@ -3,11 +3,14 @@ class BA::Book::BusinessAction < BaseAction
 
   represents :title, of: :subject
 
+  embeds_many :genres
+
   validates :title, presence: true
 
   private
 
   def execute_perform!(*)
+    subject.genres = genres
     subject.save!
   end
 end
