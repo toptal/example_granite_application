@@ -62,15 +62,20 @@ class BooksController < ApplicationController
   # DELETE /books/1.json
   def destroy
     @book = Book.find(params[:id])
-    @book.destroy
+    book_action = BA::Book::Destroy.as(current_user).new(@book)
     respond_to do |format|
-      format.html { redirect_to books_url, notice: 'Book was successfully destroyed.' }
-      format.json { head :no_content }
+      if book_action.perform
+        format.html { redirect_to books_url, notice: 'Book was successfully removed.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to books_url, alert: 'Book can not be removed.' }
+        format.json { render json: book_action.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   private
     def book_params
-      params.require(:book).to_unsafe_hash.merge(id: params[:id])
+      params.require(:book).to_unsafe_hash
     end
 end
