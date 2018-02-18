@@ -46,6 +46,22 @@ RSpec.describe BA::Book::Create do
         expect(action.subject.reload.attributes.except('id', 'created_at', 'updated_at'))
           .to eq(expected_attributes)
       end
+
+      context 'with nested attributes' do
+        let(:attributes) do
+          {
+            'title' => 'Ruby Pickaxe',
+            'genres_attributes' => [{title: 'Horror'}, {title: 'Science Fiction'}]
+          }
+        end
+
+        it 'creates the book with the given genres' do
+          expect { action.perform! }.to change { Book.count }.by(1)
+          expect(action.subject.genres).to eq(genres)
+          expect(action.subject.reload.attributes.except('id', 'created_at', 'updated_at'))
+            .to eq(expected_attributes)
+        end
+      end
     end
   end
 end

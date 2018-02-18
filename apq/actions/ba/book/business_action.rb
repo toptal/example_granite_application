@@ -5,6 +5,8 @@ class BA::Book::BusinessAction < BaseAction
 
   embeds_many :genres
 
+  accepts_nested_attributes_for :genres
+
   validates :title, presence: true
 
   private
