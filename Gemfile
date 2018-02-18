@@ -20,7 +20,6 @@ gem 'uuidtools'
 # front
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
-gem 'turbolinks', '~> 5'
 
 # api
 gem 'jbuilder', '~> 2.5'
