@@ -5,7 +5,7 @@ RSpec.describe BA::Book::Update do
 
   let(:book) { Book.create }
   let(:performer) { User.new }
-  let(:attributes) { { 'title' => 'Ruby Pickaxe' } }
+  let(:attributes) { { 'title' => 'Ruby Pickaxe', 'genres' => [] } }
 
   describe 'policies' do
     it { is_expected.to be_allowed }
