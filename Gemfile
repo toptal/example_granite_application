@@ -13,8 +13,7 @@ gem 'puma', '~> 3.7'
 
 # frameworks
 gem 'devise'
-gem 'monolith', path: '../monolith'
-gem 'active_data', github: 'pyromaniac/active_data'
+gem 'granite'
 gem 'uuidtools'
 
 # front

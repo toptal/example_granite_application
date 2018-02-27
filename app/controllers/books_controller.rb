@@ -1,5 +1,5 @@
 class BooksController < ApplicationController
-  rescue_from Monolith::Action::NotAllowedError do |exception|
+  rescue_from Granite::Action::NotAllowedError do |exception|
     redirect_to books_path, alert: 'You can not do that.'
   end
 
