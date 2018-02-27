@@ -1,24 +1,24 @@
-# README
+# Example Granite Application
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is an example application to cover the basics of using [Granite](https://github.com/toptal/granite)
+in a Rails app. For a detailed documentation, check out [the official docs](https://github.com/toptal/granite/blob/master/GETTING_STARTED.md).
 
-Things you may want to cover:
+## Setup
 
-* Ruby version
+Download or clone the repository, install ruby and bundler if you haven't already, then:
 
-* System dependencies
+```bash
+bundle install
+```
 
-* Configuration
+## Running the server
 
-* Database creation
+```bash
+bundle exec rails s
+```
 
-* Database initialization
+## Running specs
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```bash
+bundle exec rspec
+```
