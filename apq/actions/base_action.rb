@@ -1,2 +1,2 @@
-class BaseAction < Monolith::Action
+class BaseAction < Granite::Action
 end
