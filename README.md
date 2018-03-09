@@ -46,6 +46,10 @@ and render a feedback depending of action success.
 # app/controllers/book_controller.rb
 ```ruby
 class BooksController < ApplicationController
+  rescue_from Granite::Action::NotAllowedError do |exception|
+    redirect_to books_path, alert: 'You\'re not allowed to execute this action.'
+  end
+
   # POST /books
   def create
     book_action = BA::Book::Create.as(current_user).new(params.require(:book))
@@ -55,6 +59,8 @@ class BooksController < ApplicationController
       # render errors
     end
   end
+
+  # ... 
 end
 ```
 
@@ -87,8 +93,8 @@ Let's break down each macro and comprehend how it's being used:
 
 ### Policies
 
-You can expect only to execute some action with a user. For purposes, it's only
-verifying if it's a user and anything more.
+You can expect only to execute some action with a user. For testing purposes, it's only
+verifying if the performer is a user.
 
 ```ruby
 allow_if { performer.is_a?(User) }
@@ -194,4 +200,18 @@ end
 Note that the `title` is not being assigned explicitly because it's using
 `represents` and [active_data](https://github.com/pyromaniac/active_data)
 is doing the assignment behind the scenes.
+
+The policies, preconditions and validations can also block the `perform` call
+and from running the `execute_perform` method.
+
+### Rescue from `Granite::Action::NotAllowedError`
+
+[BooksController](/app/controllers/books_controller.rb) uses `rescue_from` to
+encapsulate exceptions in case the policies are not satisfied.
+
+```ruby
+rescue_from Granite::Action::NotAllowedError do |exception|
+  redirect_to books_path, alert: 'You\'re not allowed to execute this action.'
+end
+```
 
