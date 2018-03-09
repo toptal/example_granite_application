@@ -1,13 +1,20 @@
 # Example Granite Application
 
 This is an example application to cover the basics of using [Granite](https://github.com/toptal/granite)
-in a Rails app. For a detailed documentation, check out [the official docs](https://github.com/toptal/granite/blob/master/GETTING_STARTED.md).
+in a Rails app. For detailed documentation, check out [the official docs](https://github.com/toptal/granite/blob/master/GETTING_STARTED.md).
 
 ## Setup
 
-Download or clone the repository, install ruby and bundler if you haven't already, then:
+Clone the repository:
 
 ```bash
+git clone https://github.com/toptal/example_granite_application.git
+```
+
+Install Ruby and bundler if you haven't already and then:
+
+```bash
+cd example_granite_application
 bundle install
 ```
 
@@ -26,7 +33,7 @@ bundle exec rspec
 # Understanding the application example
 
 In [apq](/apq) folder you can find the business action usage of Granite.
-The application samples just contain one real model persisted in database.
+The application samples just contain one real model persisted in the database.
 
 The model persisted is [Book](/app/models/book.rb):
 
@@ -40,8 +47,8 @@ action [BA::Book::Create](/apq/actions/ba/book/create.rb) combined with the
 
 And, with a logged user we create some books with a title and a list of genres.
 
-In the controller, the action is instantiated with the current user as performer
-and render a feedback depending of action success.
+In the controller, the action is instantiated with the current user as a performer
+and render feedback depending on action success.
 
 # app/controllers/book_controller.rb
 ```ruby
@@ -112,11 +119,11 @@ With a real user:
 BA::Book::Create.as(User.first).new.allowed? # => true
 ```
 
-> Keep in mind you need to create at least one user to make this example work.
+> Remember you need to have at least one user to make this example work.
 
 ### Attributes
 
-The book has a title and also a list of genres.
+The book has a title:
 
 ```ruby
 represents :title, of: :subject
@@ -129,7 +136,7 @@ BA::Book::Create.as(User.first).new(title: "My first book")
 # => #<BA::Book::Create genres: #<EmbedsMany []>, title: "My first book">
 ```
 
-We also have embeded genres:
+And the book also have embedded genres:
 
 ```
 embeds_many :genres
@@ -160,13 +167,12 @@ BA::Book::Create.as(User.first).new(title: "My first book").valid? #  => true
 
 And, with a logged user we create some books with a title and a list of genres.
 
-In the controller, the action is instantiated with the current user as performer
-and render a feedback depending of the action response.
+In the controller, the action instantiates with the current user as the performer
+and render feedback depending on the action response.
 
 ## Subject
 
-The `subject` needs to be memoized because we're not using a persistent record
-in `BA::Book::Create`:
+The `subject` needs memoization because the record will be persistent in the action performed.
 
 ```ruby
 class BA::Book::Create < BA::Book::BusinessAction
@@ -187,8 +193,7 @@ end
 
 ## Performing the action
 
-The method `execute_perform` contains the logic that needs to be executed when
-the book is updated or created.
+The method `execute_perform` contains the real logic performed:
 
 ```ruby
 def execute_perform!(*)
@@ -197,11 +202,11 @@ def execute_perform!(*)
 end
 ```
 
-Note that the `title` is not being assigned explicitly because it's using
+Note that the `title` is not being assigned because it's using
 `represents` and [active_data](https://github.com/pyromaniac/active_data)
 is doing the assignment behind the scenes.
 
-The policies, preconditions and validations can also block the `perform` call
+The policies, preconditions, and validations can also block the `perform` call
 and from running the `execute_perform` method.
 
 ### Rescue from `Granite::Action::NotAllowedError`
@@ -214,4 +219,3 @@ rescue_from Granite::Action::NotAllowedError do |exception|
   redirect_to books_path, alert: 'You\'re not allowed to execute this action.'
 end
 ```
-
