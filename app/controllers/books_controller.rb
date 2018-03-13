@@ -1,6 +1,6 @@
 class BooksController < ApplicationController
   rescue_from Granite::Action::NotAllowedError do |exception|
-    redirect_to books_path, alert: 'You can not do that.'
+    redirect_to books_path, alert: 'You\'re not allowed to execute this action.'
   end
 
   # GET /books
@@ -68,7 +68,7 @@ class BooksController < ApplicationController
         format.html { redirect_to books_url, notice: 'Book was successfully removed.' }
         format.json { head :no_content }
       else
-        format.html { redirect_to books_url, alert: 'Book can not be removed.' }
+        format.html { redirect_to books_url, alert: 'Book can\'t be removed.' }
         format.json { render json: book_action.errors, status: :unprocessable_entity }
       end
     end
@@ -76,6 +76,6 @@ class BooksController < ApplicationController
 
   private
     def book_params
-      params.require(:book).to_unsafe_hash
+      params.require(:book)
     end
 end
