@@ -38,14 +38,14 @@ The application samples just contain one real model persisted in the database.
 The model persisted is [Book](/app/models/book.rb):
 
 ```ruby
-> Book # => Book(id: integer, title: string, genres: string)
+> Book # => Book(id: integer, title: string)
 ```
 
 [BooksController](/app/controllers/books_controller.rb) uses the
 action [BA::Book::Create](/apq/actions/ba/book/create.rb) combined with the
 `current_user` to insert the new book in the database.
 
-And, with a logged user we create some books with a title and a list of genres.
+And, with a logged user we create some books with a title.
 
 In the controller, the action is instantiated with the current user as a performer
 and render feedback depending on action success.
@@ -81,16 +81,11 @@ class BA::Book::BusinessAction < BaseAction
 
   represents :title, of: :subject
 
-  embeds_many :genres
-
-  accepts_nested_attributes_for :genres
-
   validates :title, presence: true
 
   private
 
   def execute_perform!(*)
-    subject.genres = genres
     subject.save!
   end
 end
@@ -133,21 +128,7 @@ Instancing with the title attribute:
 
 ```ruby
 BA::Book::Create.as(User.first).new(title: "My first book")
-# => #<BA::Book::Create genres: #<EmbedsMany []>, title: "My first book">
-```
-
-And the book also have embedded genres:
-
-```
-embeds_many :genres
-accepts_nested_attributes_for :genres
-```
-
-And can be instanced as keyword arguments as the `title` was used before:
-
-```ruby
-BA::Book::Create.as(User.first).new(genres: [Genre.new(title: "Science & Fiction")])
-# => #<BA::Book::Create genres: #<EmbedsMany [#<Genre title: "Science & Fiction", *id: #<Ac...]>, title: nil>
+# => #<BA::Book::Create title: "My first book">
 ```
 
 ### Validations
@@ -165,7 +146,7 @@ BA::Book::Create.as(User.first).new().valid? # => false
 BA::Book::Create.as(User.first).new(title: "My first book").valid? #  => true
 ```
 
-And, with a logged user we create some books with a title and a list of genres.
+And, with a logged user we create some books with a title.
 
 In the controller, the action instantiates with the current user as the performer
 and render feedback depending on the action response.
@@ -197,7 +178,6 @@ The method `execute_perform` contains the real logic performed:
 
 ```ruby
 def execute_perform!(*)
-  subject.genres = genres
   subject.save!
 end
 ```

@@ -2,12 +2,6 @@
   <strong>Title:</strong>
   <%= @book.title %>
 </p>
-<% if @book.genres.any? %>
-<p>
-  <strong>Genres</strong>
-  <%= @book.genres.map(&:title).join(', ') %>
-</p>
-<% end %>
 
 <%= link_to 'Edit', edit_book_path(@book) %> |
 <%= link_to 'Back', books_path %>

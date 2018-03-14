@@ -6,7 +6,7 @@ RSpec.describe BA::Book::Create do
   subject(:action) { described_class.as(performer).new(attributes) }
 
   let(:performer) { User.new }
-  let(:attributes) { { 'title' => 'Ruby Pickaxe', 'genres' => [] } }
+  let(:attributes) { { 'title' => 'Ruby Pickaxe' } }
 
   describe 'policies' do
     it { is_expected.to be_allowed }
@@ -29,36 +29,6 @@ RSpec.describe BA::Book::Create do
   describe '#perform!' do
     specify do
       expect { action.perform! }.to change { Book.count }.by(1)
-    end
-
-    context 'when given genres' do
-      let(:attributes) do
-        {
-          'title' => 'Ruby Pickaxe', 'genres' => genres
-        }
-      end
-      let(:genres) { [Genre.new(title: 'Horror'), Genre.new(title: 'Science Fiction')] }
-
-      let(:expected_attributes) { { 'title' => 'Ruby Pickaxe', 'genres' => ['Horror', 'Science Fiction'] } }
-
-      it 'creates the book with the given genres' do
-        expect { action.perform! }.to change { Book.count }.by(1)
-        expect(action.subject.genres).to eq(genres)
-      end
-
-      context 'with nested attributes' do
-        let(:attributes) do
-          {
-            'title' => 'Ruby Pickaxe',
-            'genres_attributes' => [{ title: 'Horror' }, { title: 'Science Fiction' }]
-          }
-        end
-
-        it 'creates the book with the given genres' do
-          expect { action.perform! }.to change { Book.count }.by(1)
-          expect(action.subject.genres).to eq(genres)
-        end
-      end
     end
   end
 end
