@@ -44,28 +44,28 @@ RSpec.describe BooksController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) {
-        { 'title' => 'Pickaxe Ruby 2' }
-      }
-
+      let!(:book) { Book.create! valid_attributes }
       it "updates the requested book" do
-        book = Book.create! valid_attributes
-        put :update, params: {id: book.to_param, book: new_attributes}
-        expect(book.reload.attributes.except('id', 'created_at', 'updated_at', 'genres')).to eq(valid_attributes)
+        expect do
+          put :update, params: {id: book.to_param, book: {title: 'new'}}
+        end.not_to change { book.reload.attributes }
       end
     end
   end
 
   describe "DELETE #destroy" do
+    let!(:book) { Book.create! valid_attributes }
     it "destroys the requested book" do
-      book = Book.create! valid_attributes
-      expect {
-        delete :destroy, params: {id: book.to_param}
-      }.not_to change(Book, :count)
+      expect { delete :destroy, params: {id: book.to_param} }.not_to change(Book, :count)
+    end
+
+    it "manages error messages if it throws some error destroying" do
+      expect_any_instance_of(BA::Book::Destroy).to receive(:perform).and_return(false)
+      expect { delete :destroy, params: {id: book.id } }.not_to change(Book, :count)
+      expect(flash[:alert]).to eq("Book can't be removed.")
     end
 
     it "redirects to the books list" do
-      book = Book.create! valid_attributes
       delete :destroy, params: {id: book.to_param}
       expect(response).to redirect_to(books_url)
     end
@@ -115,23 +115,21 @@ RSpec.describe BooksController, type: :controller do
 
     describe "PUT #update" do
       context "with valid params" do
-        let(:new_attributes) {
-          { 'title' => 'Pickaxe Ruby 2' }
-        }
-
         it "updates the requested book" do
-          book = Book.create! valid_attributes
-          put :update, params: {id: book.to_param, book: new_attributes}
-          expect(book.reload.attributes.except('id', 'created_at', 'updated_at', 'genres')).to eq(new_attributes)
+          book = Book.create! title: 'old'
+          expect do
+            put :update, params: {id: book.to_param, book: {title: 'new'}}
+          end.to change { book.reload.title }.from('old').to('new')
         end
       end
 
       context "with invalid params" do
         it "returns a success response (i.e. to display the 'edit' template)" do
           book = Book.create! valid_attributes
-          put :update, params: {id: book.to_param, book: invalid_attributes}
+          expect do
+            put :update, params: {id: book.to_param, book: invalid_attributes}
+          end.not_to change { book.attributes }
           expect(response).to be_success
-          expect(book.reload.attributes.except('id', 'created_at', 'updated_at', 'genres')).to eq(valid_attributes)
         end
       end
     end

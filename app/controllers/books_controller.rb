@@ -69,6 +69,7 @@ class BooksController < ApplicationController
         format.json { head :no_content }
       else
         format.html { redirect_to books_url, alert: 'Book can\'t be removed.' }
+
         format.json { render json: book_action.errors, status: :unprocessable_entity }
       end
     end

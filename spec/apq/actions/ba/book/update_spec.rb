@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe BA::Book::Update do
@@ -5,7 +7,7 @@ RSpec.describe BA::Book::Update do
 
   let(:book) { Book.create }
   let(:performer) { User.new }
-  let(:attributes) { { 'title' => 'Ruby Pickaxe', 'genres' => [] } }
+  let(:attributes) { { 'title' => 'Ruby Pickaxe' } }
 
   describe 'policies' do
     it { is_expected.to be_allowed }
@@ -20,14 +22,14 @@ RSpec.describe BA::Book::Update do
     it { is_expected.to be_valid }
 
     context 'when preconditions fail' do
-      let(:attributes) { { } }
+      let(:attributes) { {} }
       it { is_expected.not_to be_valid }
     end
   end
 
   describe '#perform!' do
     specify do
-      expect { subject.perform! }.to change { book.reload.attributes.except('id', 'created_at', 'updated_at') }.to(attributes)
+      expect { subject.perform! }.to change(book, :title).from(nil).to('Ruby Pickaxe')
     end
   end
 end
