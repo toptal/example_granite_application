@@ -31,7 +31,7 @@ RSpec.describe BA::Book::Rent do
     specify do
       expect { action.perform! }
         .to change(book, :available).from(true).to(false)
-        .and change(Rent, :count).by(1)
+        .and change(Rental, :count).by(1)
     end
   end
 end

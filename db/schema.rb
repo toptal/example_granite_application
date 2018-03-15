@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20180314201609) do
     t.boolean "available"
   end
 
-  create_table "rents", force: :cascade do |t|
+  create_table "rentals", force: :cascade do |t|
     t.integer "book_id"
     t.integer "user_id"
     t.datetime "delivered_back_at"

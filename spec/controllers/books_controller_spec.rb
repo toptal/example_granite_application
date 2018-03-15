@@ -72,8 +72,10 @@ RSpec.describe BooksController, type: :controller do
   end
 
   context 'when signed in' do
+    let(:user) { User.create }
+
     before do
-      sign_in User.create
+      sign_in user
     end
 
     describe "GET #new" do
@@ -112,6 +114,43 @@ RSpec.describe BooksController, type: :controller do
         end
       end
     end
+
+    describe "POST #rent" do
+      context "with a rentable book" do
+        let!(:book) { Book.create title: 'new', available: true }
+        it "return success response after rent the book" do
+          expect_any_instance_of(BA::Book::Rent).to receive(:perform).and_call_original
+          post :rent, params: {book_id: book.id}
+          expect(response).to redirect_to(books_url)
+          expect(flash[:notice]).to eq("Book was successfully rented.")
+        end
+      end
+
+      context 'without a rentable book' do
+        let!(:book) { Book.create title: 'new', available: false }
+        it "return success response after rent the book" do
+          expect_any_instance_of(BA::Book::Rent).to receive(:perform).and_call_original
+          post :rent, params: {book_id: book.id}
+          expect(response).to redirect_to(books_url)
+          expect(flash[:alert]).to eq("The book is unavailable.")
+        end
+      end
+    end
+    describe "POST #deliver_back" do
+      context "with a deliverable book" do
+        let!(:book) { Book.create title: 'new', available: true }
+        before do
+          BA::Book::Rent.as(user).new(book).perform!
+        end
+        it "return success response after rent the book" do
+          expect_any_instance_of(BA::Book::DeliverBack).to receive(:perform).and_call_original
+          post :deliver_back, params: {book_id: book.id}
+          expect(response).to redirect_to(books_url)
+          expect(flash[:notice]).to eq("Thanks for delivering the book back.")
+        end
+      end
+    end
+
 
     describe "PUT #update" do
       context "with valid params" do

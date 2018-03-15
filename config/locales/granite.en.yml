@@ -1,0 +1,8 @@
+en:
+  granite_action:
+    errors:
+      models:
+        ba/book/rent:
+          attributes:
+            base:
+              unavailable: 'The book is unavailable.'

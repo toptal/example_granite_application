@@ -12,8 +12,8 @@ class BA::Book::Rent < BaseAction
   private
 
   def execute_perform!(*)
-    ::Rent.create!(book: subject, user: performer)
     subject.available = false
     subject.save!
+    ::Rental.create!(book: subject, user: performer)
   end
 end

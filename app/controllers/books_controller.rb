@@ -25,6 +25,28 @@ class BooksController < ApplicationController
     @book = Book.find(params[:id])
   end
 
+  # POST /books/1/rent
+  def rent
+    @book = Book.find(params[:book_id])
+    book_action = BA::Book::Rent.as(current_user).new(@book)
+    if book_action.perform
+      redirect_to books_url, notice: 'Book was successfully rented.'
+    else
+      redirect_to books_url, alert:  book_action.errors.full_messages.to_sentence
+    end
+  end
+
+  # POST /books/1/deliver_back
+  def deliver_back
+    @book = Book.find(params[:book_id])
+    book_action = BA::Book::DeliverBack.as(current_user).new(@book)
+    if book_action.perform
+      redirect_to books_url, notice: 'Thanks for delivering the book back.'
+    else
+      redirect_to books_url, alert:  book_action.errors.full_messages.to_sentence
+    end
+  end
+
   # POST /books
   # POST /books.json
   def create

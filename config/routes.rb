@@ -4,5 +4,8 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :books
+  resources :books do
+    post :rent
+    post :deliver_back
+  end
 end

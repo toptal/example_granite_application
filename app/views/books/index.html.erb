@@ -12,9 +12,17 @@
     <% @books.each do |book| %>
       <tr>
         <td><%= book.title %></td>
+        <% if book.available? %>
+          <td><%= link_to 'Rent', book_rent_path(book), method: :post, data: { confirm: 'Rent this book?' }  %></td>
+        <% else %>
+          <td>(Rented)</td>
+        <% end %>
+        <% if current_user && current_user.renting?(book) %>
+           <td><%= link_to 'Deliver back', book_deliver_back_path(book), method: :post, data: { confirm: 'Are you delivering this book back?' }  %></td>
+        <% end %>
         <td><%= link_to 'Show', book %></td>
         <td><%= link_to 'Edit', edit_book_path(book) %></td>
-        <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Do you really want to destroy this book?' } %></td>
       </tr>
     <% end %>
   </tbody>
