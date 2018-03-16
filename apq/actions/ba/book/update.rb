@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class BA::Book::Update < BA::Book::BusinessAction
+class Ba::Book::Update < Ba::Book::BusinessAction
   subject :book
 end

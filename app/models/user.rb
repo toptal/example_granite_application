@@ -7,6 +7,6 @@ class User < ApplicationRecord
   has_many :books, through: :rents
 
   def renting?(book)
-    rentals.current.where(id: book.id).exists?
+    rentals.current.where(book_id: book.id).exists?
   end
 end

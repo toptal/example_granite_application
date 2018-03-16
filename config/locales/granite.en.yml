@@ -6,3 +6,18 @@ en:
           attributes:
             base:
               unavailable: 'The book is unavailable.'
+        ba/book/deliver_back:
+          attributes:
+            base:
+              unavailable: 'The book is unavailable.'
+      messages:
+          action_invalid: 'Invalid action'
+    ba/book/rent:
+      inline:
+        perform:
+          notice: "Enjoy the book!"
+          error: "Failed trying to rent the book! <br> %s"
+    ba/book/deliver_back:
+      inline:
+        perform:
+          notice: "Thanks for delivering back!"

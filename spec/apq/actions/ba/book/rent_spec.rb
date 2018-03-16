@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe BA::Book::Rent do
+RSpec.describe Ba::Book::Rent do
   subject(:action) { described_class.as(performer).new(book) }
 
   let(:available) { true }

@@ -1,15 +1,13 @@
-class BA::Book::DeliverBack < BA::Book::BusinessAction
+class Ba::Book::DeliverBack < BaseAction
 
   subject :book
 
-  allow_if { performer.is_a?(User) }
+  projector :inline
 
-  precondition do
-    decline_with(:not_renting) if rental.nil?
-  end
+  allow_if { rental.present? }
 
   def rental
-    @rental ||= Rental.find_by(book: book, user: performer, delivered_back_at: nil)
+    @rental ||= performer.rentals.current.find_by(book: book)
   end
 
   private

@@ -60,7 +60,7 @@ RSpec.describe BooksController, type: :controller do
     end
 
     it "manages error messages if it throws some error destroying" do
-      expect_any_instance_of(BA::Book::Destroy).to receive(:perform).and_return(false)
+      expect_any_instance_of(Ba::Book::Destroy).to receive(:perform).and_return(false)
       expect { delete :destroy, params: {id: book.id } }.not_to change(Book, :count)
       expect(flash[:alert]).to eq("Book can't be removed.")
     end
@@ -119,7 +119,7 @@ RSpec.describe BooksController, type: :controller do
       context "with a rentable book" do
         let!(:book) { Book.create title: 'new', available: true }
         it "return success response after rent the book" do
-          expect_any_instance_of(BA::Book::Rent).to receive(:perform).and_call_original
+          expect_any_instance_of(Ba::Book::Rent).to receive(:perform).and_call_original
           post :rent, params: {book_id: book.id}
           expect(response).to redirect_to(books_url)
           expect(flash[:notice]).to eq("Book was successfully rented.")
@@ -129,7 +129,7 @@ RSpec.describe BooksController, type: :controller do
       context 'without a rentable book' do
         let!(:book) { Book.create title: 'new', available: false }
         it "return success response after rent the book" do
-          expect_any_instance_of(BA::Book::Rent).to receive(:perform).and_call_original
+          expect_any_instance_of(Ba::Book::Rent).to receive(:perform).and_call_original
           post :rent, params: {book_id: book.id}
           expect(response).to redirect_to(books_url)
           expect(flash[:alert]).to eq("The book is unavailable.")
@@ -140,10 +140,10 @@ RSpec.describe BooksController, type: :controller do
       context "with a deliverable book" do
         let!(:book) { Book.create title: 'new', available: true }
         before do
-          BA::Book::Rent.as(user).new(book).perform!
+          Ba::Book::Rent.as(user).new(book).perform!
         end
         it "return success response after rent the book" do
-          expect_any_instance_of(BA::Book::DeliverBack).to receive(:perform).and_call_original
+          expect_any_instance_of(Ba::Book::DeliverBack).to receive(:perform).and_call_original
           post :deliver_back, params: {book_id: book.id}
           expect(response).to redirect_to(books_url)
           expect(flash[:notice]).to eq("Thanks for delivering the book back.")

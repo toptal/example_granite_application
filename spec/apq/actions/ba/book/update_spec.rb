@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe BA::Book::Update do
+RSpec.describe Ba::Book::Update do
   subject(:action) { described_class.as(performer).new(book, attributes) }
 
   let(:book) { Book.create }

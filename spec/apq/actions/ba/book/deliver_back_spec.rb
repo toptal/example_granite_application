@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe BA::Book::DeliverBack do
+RSpec.describe Ba::Book::DeliverBack do
   subject(:action) { described_class.as(performer).new(book) }
 
   let(:book) { Book.create! title: 'Learn to fly', available: true }
@@ -17,7 +17,7 @@ RSpec.describe BA::Book::DeliverBack do
 
   describe 'preconditions' do
     context 'when the user rented the book' do
-      before { BA::Book::Rent.as(performer).new(book).perform! }
+      before { Ba::Book::Rent.as(performer).new(book).perform! }
       it { is_expected.to be_satisfy_preconditions }
     end
 
@@ -27,7 +27,7 @@ RSpec.describe BA::Book::DeliverBack do
   end
 
   describe '#perform!' do
-    let!(:rental) { BA::Book::Rent.as(performer).new(book).perform! }
+    let!(:rental) { Ba::Book::Rent.as(performer).new(book).perform! }
 
     specify do
       expect { action.perform! }

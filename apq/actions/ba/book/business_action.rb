@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BA::Book::BusinessAction < BaseAction
+class Ba::Book::BusinessAction < BaseAction
   allow_if { performer.is_a?(User) }
 
   represents :title, of: :subject

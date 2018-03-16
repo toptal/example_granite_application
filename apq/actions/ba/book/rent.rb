@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-class BA::Book::Rent < BaseAction
+class Ba::Book::Rent < BaseAction
   allow_if { performer.is_a?(User) }
+
+  projector :inline
 
   subject :book
 

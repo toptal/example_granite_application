@@ -25,32 +25,10 @@ class BooksController < ApplicationController
     @book = Book.find(params[:id])
   end
 
-  # POST /books/1/rent
-  def rent
-    @book = Book.find(params[:book_id])
-    book_action = BA::Book::Rent.as(current_user).new(@book)
-    if book_action.perform
-      redirect_to books_url, notice: 'Book was successfully rented.'
-    else
-      redirect_to books_url, alert:  book_action.errors.full_messages.to_sentence
-    end
-  end
-
-  # POST /books/1/deliver_back
-  def deliver_back
-    @book = Book.find(params[:book_id])
-    book_action = BA::Book::DeliverBack.as(current_user).new(@book)
-    if book_action.perform
-      redirect_to books_url, notice: 'Thanks for delivering the book back.'
-    else
-      redirect_to books_url, alert:  book_action.errors.full_messages.to_sentence
-    end
-  end
-
   # POST /books
   # POST /books.json
   def create
-    book_action = BA::Book::Create.as(current_user).new(book_params)
+    book_action = Ba::Book::Create.as(current_user).new(book_params)
 
     respond_to do |format|
       if book_action.perform
@@ -68,7 +46,7 @@ class BooksController < ApplicationController
   # PATCH/PUT /books/1.json
   def update
     @book = Book.find(params[:id])
-    book_action = BA::Book::Update.as(current_user).new(@book, book_params)
+    book_action = Ba::Book::Update.as(current_user).new(@book, book_params)
     respond_to do |format|
       if book_action.perform
         format.html { redirect_to @book, notice: 'Book was successfully updated.' }
@@ -84,7 +62,7 @@ class BooksController < ApplicationController
   # DELETE /books/1.json
   def destroy
     @book = Book.find(params[:id])
-    book_action = BA::Book::Destroy.as(current_user).new(@book)
+    book_action = Ba::Book::Destroy.as(current_user).new(@book)
     respond_to do |format|
       if book_action.perform
         format.html { redirect_to books_url, notice: 'Book was successfully removed.' }
