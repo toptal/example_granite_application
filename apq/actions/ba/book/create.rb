@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Ba::Book::Create < Ba::Book::BusinessAction
+
   def subject
     @subject ||= ::Book.new
   end

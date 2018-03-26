@@ -6,6 +6,6 @@ Rails.application.routes.draw do
 
   resources :books do
     granite 'ba/book/rent#inline'
-    granite 'ba/book/deliver_back#inline'
+    granite 'ba/book/return#inline'
   end
 end

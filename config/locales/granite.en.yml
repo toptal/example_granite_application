@@ -17,7 +17,7 @@ en:
         perform:
           notice: "Enjoy the book!"
           error: "Failed trying to rent the book! <br> %s"
-    ba/book/deliver_back:
+    ba/book/return:
       inline:
         perform:
           notice: "Thanks for delivering back!"

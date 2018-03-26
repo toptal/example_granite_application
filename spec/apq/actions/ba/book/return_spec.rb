@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Ba::Book::DeliverBack do
+RSpec.describe Ba::Book::Return do
   subject(:action) { described_class.as(performer).new(book) }
 
   let(:book) { Book.create! title: 'Learn to fly', available: true }
@@ -27,12 +27,13 @@ RSpec.describe Ba::Book::DeliverBack do
   end
 
   describe '#perform!' do
-    let!(:rental) { Ba::Book::Rent.as(performer).new(book).perform! }
+    let!(:rent_action) { Ba::Book::Rent.as(performer).new(book) }
+    before { rent_action.perform!  }
 
     specify do
       expect { action.perform! }
         .to change { book.reload.available }.from(false).to(true)
-        .and change { rental.reload.delivered_back_at }.from(nil)
+        .and change { performer.reload.rentals.current.count}.from(1).to(0)
     end
   end
 end

@@ -29,8 +29,6 @@ class InlineProjector < Granite::Projector
     return unless action.allowed?
     if action.performable?
       h.link_to action_label, perform_path, method: :post
-    else
-      h.content_tag(:strike, action_label, title: action.errors.full_messages.to_sentence)
     end
   end
 end
