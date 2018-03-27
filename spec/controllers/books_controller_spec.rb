@@ -115,45 +115,6 @@ RSpec.describe BooksController, type: :controller do
       end
     end
 
-    xdescribe "POST #rent" do
-      context "with a rentable book" do
-        let!(:book) { Book.create title: 'new', available: true }
-        it "return success response after rent the book" do
-          expect_any_instance_of(Ba::Book::Rent).to receive(:perform).and_call_original
-          post :rent, params: {book_id: book.id}
-          expect(response).to redirect_to(books_url)
-          expect(flash[:notice]).to eq("Book was successfully rented.")
-        end
-      end
-
-      context 'without a rentable book' do
-        let!(:book) { Book.create title: 'new', available: false }
-        it "return success response after rent the book" do
-          expect_any_instance_of(Ba::Book::Rent).to receive(:perform).and_call_original
-          post :rent, params: {book_id: book.id}
-          expect(response).to redirect_to(books_url)
-          expect(flash[:alert]).to eq("The book is unavailable.")
-        end
-      end
-    end
-
-    xdescribe "POST #return_book" do # for some reason the routes are not being generated properly
-      context "with a deliverable book" do
-        let(:book) { Book.create title: 'new', available: true }
-        before do
-          Rental.create!(user: user, book: book)
-        end
-
-        it "return success response after rent the book" do
-          expect_any_instance_of(Ba::Book::Return).to receive(:perform).and_call_original
-          post :return, params: {book_id: book.id}
-          expect(response).to redirect_to(books_url)
-          expect(flash[:notice]).to eq("Thanks for delivering the book back.")
-        end
-      end
-    end
-
-
     describe "PUT #update" do
       context "with valid params" do
         it "updates the requested book" do
