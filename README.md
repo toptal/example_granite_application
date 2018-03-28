@@ -199,3 +199,6 @@ rescue_from Granite::Action::NotAllowedError do |exception|
   redirect_to books_path, alert: 'You\'re not allowed to execute this action.'
 end
 ```
+
+You can check more details about the entire application following the official
+documentation [tutorial](https://toptal.github.io/granite/tutorial).
