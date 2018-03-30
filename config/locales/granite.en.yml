@@ -6,7 +6,7 @@ en:
           attributes:
             base:
               unavailable: 'The book is unavailable.'
-        ba/book/deliver_back:
+        ba/book/return:
           attributes:
             base:
               unavailable: 'The book is unavailable.'
