@@ -38,14 +38,14 @@ The application samples just contain one real model persisted in the database.
 The model persisted is [Book](/app/models/book.rb):
 
 ```ruby
-> Book # => Book(id: integer, title: string, genres: string)
+> Book # => Book(id: integer, title: string)
 ```
 
 [BooksController](/app/controllers/books_controller.rb) uses the
-action [BA::Book::Create](/apq/actions/ba/book/create.rb) combined with the
+action [Ba::Book::Create](/apq/actions/ba/book/create.rb) combined with the
 `current_user` to insert the new book in the database.
 
-And, with a logged user we create some books with a title and a list of genres.
+And, with a logged user we create some books with a title.
 
 In the controller, the action is instantiated with the current user as a performer
 and render feedback depending on action success.
@@ -59,7 +59,7 @@ class BooksController < ApplicationController
 
   # POST /books
   def create
-    book_action = BA::Book::Create.as(current_user).new(params.require(:book))
+    book_action = Ba::Book::Create.as(current_user).new(params.require(:book))
     if book_action.perform
       # render success
     else
@@ -72,25 +72,20 @@ end
 ```
 
 The current action and controller are clean because the logic and important behavior from
-[BA::Book::BusinessAction](/apq/actions/ba/book/business_action.rb) is where
+[Ba::Book::BusinessAction](/apq/actions/ba/book/business_action.rb) is where
 the magic is:
 
 ```ruby
-class BA::Book::BusinessAction < BaseAction
+class Ba::Book::BusinessAction < BaseAction
   allow_if { performer.is_a?(User) }
 
   represents :title, of: :subject
-
-  embeds_many :genres
-
-  accepts_nested_attributes_for :genres
 
   validates :title, presence: true
 
   private
 
   def execute_perform!(*)
-    subject.genres = genres
     subject.save!
   end
 end
@@ -110,13 +105,13 @@ allow_if { performer.is_a?(User) }
 Testing it on the console:
 
 ```ruby
-BA::Book::Create.as('Fake User').new.allowed? # => false
+Ba::Book::Create.as('Fake User').new.allowed? # => false
 ```
 
 With a real user:
 
 ```ruby
-BA::Book::Create.as(User.first).new.allowed? # => true
+Ba::Book::Create.as(User.first).new.allowed? # => true
 ```
 
 > Remember you need to have at least one user to make this example work.
@@ -132,22 +127,8 @@ represents :title, of: :subject
 Instancing with the title attribute:
 
 ```ruby
-BA::Book::Create.as(User.first).new(title: "My first book")
-# => #<BA::Book::Create genres: #<EmbedsMany []>, title: "My first book">
-```
-
-And the book also have embedded genres:
-
-```
-embeds_many :genres
-accepts_nested_attributes_for :genres
-```
-
-And can be instanced as keyword arguments as the `title` was used before:
-
-```ruby
-BA::Book::Create.as(User.first).new(genres: [Genre.new(title: "Science & Fiction")])
-# => #<BA::Book::Create genres: #<EmbedsMany [#<Genre title: "Science & Fiction", *id: #<Ac...]>, title: nil>
+Ba::Book::Create.as(User.first).new(title: "My first book")
+# => #<Ba::Book::Create title: "My first book">
 ```
 
 ### Validations
@@ -161,11 +142,11 @@ validates :title, presence: true
 And check if the action is valid or not:
 
 ```ruby
-BA::Book::Create.as(User.first).new().valid? # => false
-BA::Book::Create.as(User.first).new(title: "My first book").valid? #  => true
+Ba::Book::Create.as(User.first).new().valid? # => false
+Ba::Book::Create.as(User.first).new(title: "My first book").valid? #  => true
 ```
 
-And, with a logged user we create some books with a title and a list of genres.
+And, with a logged user we create some books with a title.
 
 In the controller, the action instantiates with the current user as the performer
 and render feedback depending on the action response.
@@ -175,7 +156,7 @@ and render feedback depending on the action response.
 The `subject` needs memoization because the record will be persistent in the action performed.
 
 ```ruby
-class BA::Book::Create < BA::Book::BusinessAction
+class Ba::Book::Create < BA::Book::BusinessAction
   def subject
     @subject ||= ::Book.new
   end
@@ -183,10 +164,10 @@ end
 ```
 
 While we have a special macro for `subject` in the action
-[BA::Book::Update](/apq/actions/ba/book/update.rb), just referring it's a book.
+[Ba::Book::Update](/apq/actions/ba/book/update.rb), just referring it's a book.
 
 ```ruby
-class BA::Book::Update < BA::Book::BusinessAction
+class Ba::Book::Update < BA::Book::BusinessAction
   subject :book
 end
 ```
@@ -197,7 +178,6 @@ The method `execute_perform` contains the real logic performed:
 
 ```ruby
 def execute_perform!(*)
-  subject.genres = genres
   subject.save!
 end
 ```
@@ -219,3 +199,6 @@ rescue_from Granite::Action::NotAllowedError do |exception|
   redirect_to books_path, alert: 'You\'re not allowed to execute this action.'
 end
 ```
+
+You can check more details about the entire application following the official
+documentation [tutorial](https://toptal.github.io/granite/tutorial).

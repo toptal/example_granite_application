@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "books/index", type: :view do
+
+  include Devise::TestHelpers
+
   before(:each) do
     assign(:books, [
       Book.create!(

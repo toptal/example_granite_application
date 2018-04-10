@@ -1,0 +1,23 @@
+en:
+  granite_action:
+    errors:
+      models:
+        ba/book/rent:
+          attributes:
+            base:
+              unavailable: 'The book is unavailable.'
+        ba/book/return:
+          attributes:
+            base:
+              unavailable: 'The book is unavailable.'
+      messages:
+          action_invalid: 'Invalid action'
+    ba/book/rent:
+      inline:
+        perform:
+          notice: "Enjoy the book!"
+          error: "Failed trying to rent the book! <br> %s"
+    ba/book/return:
+      inline:
+        perform:
+          notice: "Thanks for delivering back!"

@@ -16,14 +16,6 @@
     <%= form.text_field :title, id: :book_title %>
   </div>
 
-  <div class="field" id="genres">
-    <%= form.label :genres %>
-    <%= form.fields_for :genres, (book.genres.presence || Genre.new) do |genres| %>
-      <%= genres.text_field :title, class: 'genre-title' %>
-    <% end %>
-  </div>
-  <button id="add-genre" type="button">Add</button>
-
   <div class="actions">
     <%= form.submit %>
   </div>

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe BA::Book::Destroy do
+RSpec.describe Ba::Book::Destroy do
   subject(:action) { described_class.as(performer).new(book) }
 
   let(:book) { Book.create }

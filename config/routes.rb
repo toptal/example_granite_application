@@ -4,5 +4,8 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :books
+  resources :books do
+    granite 'ba/book/rent#inline'
+    granite 'ba/book/return#inline'
+  end
 end
